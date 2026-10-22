@@ -1,0 +1,26 @@
+
+{
+  "version": 1,
+  "author": "Teste DAC",
+  "editor": "wokwi",
+  "parts": [
+    {"type":"board-esp32-devkit-c-v4","id":"esp","top":0,"left":0,"attrs":{}},
+    {"type":"wokwi-7segment","id":"disp","top":-100,"left":280,"attrs":{"common":"cathode"}},
+    {"type":"wokwi-led","id":"verde","top":90,"left":300,"attrs":{"color":"green"}},
+    {"type":"wokwi-led","id":"vermelho","top":150,"left":300,"attrs":{"color":"red"}}
+  ],
+  "connections": [
+    ["esp:13","disp:A","green",[]],
+    ["esp:12","disp:B","green",[]],
+    ["esp:14","disp:C","green",[]],
+    ["esp:27","disp:D","green",[]],
+    ["esp:26","disp:E","green",[]],
+    ["esp:25","disp:F","green",[]],
+    ["esp:33","disp:G","green",[]],
+    ["disp:COM.1","esp:GND.1","black",[]],
+    ["verde:A","esp:18","green",[]],
+    ["verde:C","esp:GND.1","black",[]],
+    ["vermelho:A","esp:19","red",[]],
+    ["vermelho:C","esp:GND.1","black",[]]
+  ]
+}
