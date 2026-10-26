@@ -26,7 +26,7 @@ PORTA = 1883
 TOPICO = "dac-teste-2026-ocupacao-74291"  # igual ao do sketch.ino
 
 # Capacidade didática de referência (não é a capacidade real da rede)
-CAPACIDADE_REF_BPS = 1_000_000
+CAPACIDADE_REF_BPS = 20_000_000
 
 MENSAGEM_SEM_DADOS = "OCUP,0.0,0,0,0"
 

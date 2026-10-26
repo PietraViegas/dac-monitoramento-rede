@@ -1,0 +1,22 @@
+CALIBRAÇÃO DA CAPACIDADE DE REFERÊNCIA (D11)
+Gerado em 26/10/2026 17:46 | média móvel: 3 janelas de 1 s
+
+Taxas medidas (TCP+UDP+ICMP), em Mbit/s
+
+| Cenário | Janelas | Média | Mediana | p95 | Máximo | p95 da média móvel |
+|---|---|---|---|---|---|---|
+| Normal | 30 | 0.08 | 0.01 | 0.15 | 1.87 | 0.63 |
+| Vídeo | 30 | 4.07 | 0.11 | 15.65 | 28.11 | 9.37 |
+| Gargalo | 30 | 33.83 | 38.01 | 44.59 | 44.64 | 43.26 |
+
+Regra aplicada
+- Mínimo (Normal e Vídeo abaixo de 80% em 95% das janelas): 11.71 Mbit/s
+- Máximo (Gargalo acima de 80% em 75% das janelas): 38.74 Mbit/s
+- Folga aplicada sobre o mínimo: 25%
+
+REFERÊNCIA RECOMENDADA: 20 Mbit/s
+Comando: python monitor.py --capacidade 20000000 --media 3
+No publicador.py: CAPACIDADE_REF_BPS = 20_000_000
+
+Frase pronta para a decisão D11:
+“A capacidade de referência é didática, de 20 Mbit/s, escolhida a partir do tráfego medido em três cenários (normal: p95 de 0.63 Mbit/s; vídeo: p95 de 9.37 Mbit/s; speedtest: mediana de 37.53 Mbit/s), com média móvel de 3 s.”
