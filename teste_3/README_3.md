@@ -19,6 +19,7 @@ Placa de rede → Scapy (sniffer) → soma por janela de 1 s → ocupação %
 | `sniffer_basico.py` | Captura e **imprime** os pacotes (hora, protocolo, tamanho, origem → destino). Também define `extrair_registro()`, usada pelo monitor |
 | `monitor.py` | Captura + janela de 1 s + média móvel + envio MQTT. É o programa principal |
 | `publicador.py` | **Cópia** do `teste_2/publicador.py`. O monitor importa dele `montar_mensagem()`, o broker e o tópico |
+| `calibrar.py` | Mede 3 cenários (normal, vídeo, speedtest) e recomenda a capacidade de referência. Grava `calibracao_resultado.txt` |
 
 Use o `sketch.ino` e o `diagram.json` da pasta `teste_2` (não mudaram).
 
@@ -43,10 +44,11 @@ python sniffer_basico.py --iface "Wi-Fi"                  # escolhe a interface
 **Monitor completo (com o Wokwi rodando e mostrando `MQTT conectado!`):**
 
 ```
-python monitor.py                                         # referência de 1 Mbit/s
-python monitor.py --capacidade 10000000 --media 3         # 10 Mbit/s, média de 3 s
+python monitor.py                                         # usa o CAPACIDADE_REF_BPS do publicador.py (hoje 20 Mbit/s)
+python monitor.py --capacidade 20000000 --media 3         # configuração calibrada: 20 Mbit/s, média de 3 s
 python monitor.py --sem-mqtt                              # só mostra as janelas, sem enviar
 python monitor.py --duracao 30                            # para sozinho após 30 s
+python calibrar.py                                        # refaz a calibração da referência (3 cenários de 30 s)
 ```
 
 Para parar, **Ctrl+C uma vez só** e esperar "Monitor finalizado". Ao parar, o display do ESP32 volta ao traço ("sem dados").
@@ -87,13 +89,18 @@ Tópico `dac-teste-2026-ocupacao-74291`, QoS 0, sem retain, sem quebra de linha.
 | Ping | 1 pedido + 1 resposta por segundo, 74 bytes cada (14 + 20 + 8 + 32) |
 | Monitor com tráfego real | 62 s de captura, display e LEDs acompanharam o nível |
 | Referência de 1 Mbit/s, sem média | Tráfego normal fica em 10 a 300 kbit/s, mas rajadas chegaram a 14 Mbit/s; o vermelho acendeu em 16 de 62 s |
+| Calibração (26/10/2026) | p95 da média móvel: normal 0,63 / vídeo 9,37 Mbit/s; speedtest com mediana de 38,01 Mbit/s. Referência definida em **20 Mbit/s** |
+| Monitor com 20 Mbit/s e média de 3 s | O vídeo ficou verde e o speedtest acendeu o vermelho |
 
-## Pendências e decisões em aberto
+## Decisões tomadas
 
-- **Capacidade de referência:** proposta de 10 Mbit/s com `--media 3`, a validar no notebook com 3 cenários (parado, vídeo, speedtest).
-- **Vídeo** gera rajadas (buffer) e acende o vermelho por 1 s; a média móvel de 3 s foi criada para isso.
-- **Broker:** desde 25/10/2026 o broker é o `broker.hivemq.com`, porque o `broker.emqx.io` ficou inacessível (ver `registro_incidente_broker_mqtt.txt`). O endereço está em `publicador.py` (`BROKER`) e no `sketch.ino` (`servidor`).
+- **Capacidade de referência: 20 Mbit/s, com média móvel de 3 s** (calibração de 26/10/2026; ver `calibracao_resultado.txt` e a decisão D11). Antes o padrão era 1 Mbit/s, e o vermelho acendia em 16 de 62 s em uso normal. A proposta inicial de 10 Mbit/s foi descartada porque o p95 do vídeo (9,37 Mbit/s na média móvel) ocuparia cerca de 94% dela.
+- **Vídeo gera rajadas** (o navegador enche um buffer e depois quase para): a média móvel de 3 s resolve, e foi validada com tráfego real.
+- **Circuito:** a decodificação do display e o acionamento dos LEDs ficam **por software no ESP32**, via MQTT. O professor aprovou essa escolha por e-mail em 26/10/2026 (justificativa: otimizar o tempo de desenvolvimento e focar na estabilidade da integração). Deve constar em "Tomadas de decisão tecnológica" e na "Justificativa da solução" do PDF (decisão D15).
+- **Broker:** desde 25/10/2026 é o `broker.hivemq.com`, porque o `broker.emqx.io` ficou inacessível (ver `registro_incidente_broker_mqtt.txt`). O endereço está em `publicador.py` (`BROKER`) e no `sketch.ino` (`servidor`).
 
 ## Ainda não implementado (objetivos da DAC)
 
-Fila dinâmica (buffer) de pacotes, árvore binária de busca ou tabela hash por IP, ordenação do top de consumidores (QuickSort/MergeSort) com análise de complexidade, compressão de logs (Huffman), relatório consolidado de banda por protocolo e circuito com portas lógicas, decodificador e multiplexador.
+Fila dinâmica (buffer) de pacotes, árvore binária de busca ou tabela hash por IP, ordenação do top de consumidores (QuickSort/MergeSort) com análise de complexidade, compressão de logs (Huffman) e relatório consolidado de banda por protocolo.
+
+O circuito com portas lógicas, decodificador e multiplexador **não será feito**: o professor aprovou manter a lógica por software no ESP32.
