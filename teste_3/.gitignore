@@ -1,0 +1,4 @@
+# Gerados pelo monitor --log e pelo huffman.py
+trafego_log*
+*.huf
+*.descomprimido
