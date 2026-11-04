@@ -30,11 +30,15 @@ A ocupação é a taxa medida dividida por uma capacidade de referência didáti
 
 ## Como rodar
 
-Requisitos (Windows): [Npcap](https://npcap.com) com "WinPcap API-compatible Mode", Python 3.13 e `pip install scapy paho-mqtt`.
+Requisitos (Windows): [Npcap](https://npcap.com) com "WinPcap API-compatible Mode" e Python 3.13 ou mais novo. Na raiz do repositório:
 
-1. Abra o circuito no Wokwi com `teste_2/wokwi/sketch.ino` e `teste_2/wokwi/diagram.json`, dê Play e espere `MQTT conectado!` no monitor serial.
-   Link do projeto no Wokwi: _(adicionar)_
-2. Em `teste_3/`, rode o monitor (como administrador, se der erro de permissão):
+```
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install scapy paho-mqtt
+```
+
+1. Abra o circuito no Wokwi (**https://wokwi.com/projects/478431213718363137**), dê Play e espere `MQTT conectado!` no monitor serial. O código e o circuito são os de `teste_2/wokwi/sketch.ino` e `teste_2/wokwi/diagram.json`.
+2. Em `teste_3/`, com a `.venv` ativada (`.\.venv\Scripts\Activate.ps1`), rode o monitor num terminal como administrador:
 
 ```
 cd teste_3
@@ -66,5 +70,4 @@ Entregues à parte (não ficam no repositório):
 - Artigo em PDF: justificativa, objetivos, metodologia, decisões, resultados e limitações.
 - Relatório de decisões tecnológicas (D1 a D20).
 - Autoavaliação da equipe.
-- Vídeo da apresentação: _(adicionar link)_
-- Quadro do Trello: _(adicionar link ou print)_
+- Vídeo da apresentação.
