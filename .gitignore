@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.pyc
+.venv/
 
 # Documentos de entrega e materiais de apoio (ficam fora do repositório)
 *.pdf
