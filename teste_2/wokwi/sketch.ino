@@ -2,7 +2,7 @@
 #include <PubSubClient.h>
 
 // ===== Configuração (deve ser igual à do publicador Python) =====
-const char* servidor = "broker.emqx.io";
+const char* servidor = "broker.hivemq.com";  // trocado em 25/10/2026 (D6): broker.emqx.io ficou inacessível
 const char* topico = "dac-teste-2026-ocupacao-74291";
 
 const unsigned long TEMPO_SEM_DADOS_MS = 3000;  // sem mensagem válida por 3 s = sem dados

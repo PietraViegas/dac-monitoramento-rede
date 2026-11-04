@@ -12,10 +12,10 @@ que, ao parar, é comprimido com Huffman.
 Requisitos: sniffer_basico.py, publicador.py, estruturas.py e huffman.py na MESMA pasta deste arquivo.
 
 Uso:
-    python monitor.py                       # captura até Ctrl+C e envia ao ESP32
+    python monitor.py                       # captura até Ctrl+C e envia ao ESP32 (20 Mbit/s, média de 3 s)
     python monitor.py --sem-mqtt            # só mostra as janelas (sem enviar)
     python monitor.py --capacidade 200000   # referência de 200 kbit/s (alerta mais fácil)
-    python monitor.py --media 3             # ocupação = média dos últimos 3 s (menos "piscadas")
+    python monitor.py --media 1             # sem média móvel: ocupação de cada janela de 1 s
     python monitor.py --duracao 30          # para sozinho depois de 30 s
     python monitor.py --iface "Wi-Fi"       # escolhe a interface
     python monitor.py --top 5               # mostra só os 5 maiores consumidores ao parar
@@ -168,8 +168,8 @@ def main(argv=None):
     parser.add_argument("--iface", default=None, help="interface de rede (veja sniffer_basico.py --listar)")
     parser.add_argument("--capacidade", type=int, default=publicador.CAPACIDADE_REF_BPS,
                         help=f"capacidade de referência em bit/s (padrão: {publicador.CAPACIDADE_REF_BPS})")
-    parser.add_argument("--media", type=int, default=1,
-                        help="nº de janelas de 1 s usadas na média móvel da ocupação (padrão: 1 = sem suavização)")
+    parser.add_argument("--media", type=int, default=3,
+                        help="nº de janelas de 1 s usadas na média móvel da ocupação (padrão: 3, calibrado; 1 = sem suavização)")
     parser.add_argument("--duracao", type=float, default=0, help="segundos de execução (0 = até Ctrl+C)")
     parser.add_argument("--top", type=int, default=10,
                         help="quantos IPs mostrar no top de consumidores ao parar (0 = não mostra)")

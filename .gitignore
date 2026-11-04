@@ -1,0 +1,8 @@
+# Python
+__pycache__/
+*.pyc
+
+# Documentos de entrega e materiais de apoio (ficam fora do repositório)
+*.pdf
+*.html
+*_files/
