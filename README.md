@@ -37,7 +37,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install scapy paho-mqtt
 ```
 
-1. Abra o circuito no Wokwi (**https://wokwi.com/projects/478431213718363137**), dê Play e espere `MQTT conectado!` no monitor serial. O código e o circuito são os de `teste_2/wokwi/sketch.ino` e `teste_2/wokwi/diagram.json`.
+1. Abra o circuito no Wokwi (**https://wokwi.com/projects/479721217897169921**), dê Play e espere `MQTT conectado!` no monitor serial. O código e o circuito são os de `teste_2/wokwi/sketch.ino` e `teste_2/wokwi/diagram.json`.
 2. Em `teste_3/`, com a `.venv` ativada (`.\.venv\Scripts\Activate.ps1`), rode o monitor num terminal como administrador:
 
 ```
