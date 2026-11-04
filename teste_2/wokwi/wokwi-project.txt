@@ -1,3 +1,5 @@
 Downloaded from https://wokwi.com/projects/478431213718363137
 
+Versão atual (broker.hivemq.com): https://wokwi.com/projects/479721217897169921
+
 Simulate this project on https://wokwi.com

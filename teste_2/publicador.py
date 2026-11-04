@@ -21,7 +21,7 @@ import time
 
 import paho.mqtt.client as mqtt
 
-BROKER = "broker.emqx.io"
+BROKER = "broker.hivemq.com"  # trocado em 25/10/2026 (D6): broker.emqx.io ficou inacessível
 PORTA = 1883
 TOPICO = "dac-teste-2026-ocupacao-74291"  # igual ao do sketch.ino
 

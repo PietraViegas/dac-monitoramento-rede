@@ -21,10 +21,10 @@ Placa de rede → Scapy (sniffer) → soma por janela de 1 s → ocupação %
 | `estruturas.py` | Fila dinâmica, árvore binária de busca por IP e QuickSort, feitas à mão (sem `deque`/`sorted`) |
 | `huffman.py` | Compressão e descompressão Huffman (com heap mínimo próprio). Usado pelo monitor e também pela linha de comando |
 | `teste_estruturas.py`, `teste_huffman.py`, `teste_monitor.py` | Testes automáticos. Não capturam pacotes (não precisam de administrador) |
-| `publicador.py` | **Cópia** do `teste_2/publicador.py`. O monitor importa dele `montar_mensagem()`, o broker e o tópico |
+| `publicador.py` | Cópia do `teste_2/publicador.py` com a referência calibrada (`CAPACIDADE_REF_BPS = 20_000_000`; no Teste 2 era 1 Mbit/s). O monitor importa dele `montar_mensagem()`, o broker e o tópico |
 | `calibrar.py` | Mede 3 cenários (normal, vídeo, speedtest) e recomenda a capacidade de referência. Grava `calibracao_resultado.txt` |
 
-Use o `sketch.ino` e o `diagram.json` da pasta `teste_2` (não mudaram).
+Use o `sketch.ino` e o `diagram.json` da pasta `teste_2`. O contrato de dados é o mesmo; só o broker mudou para `broker.hivemq.com` (D6), e o `sketch.ino` já está atualizado.
 
 ## Requisitos (Windows)
 
@@ -47,8 +47,8 @@ python sniffer_basico.py --iface "Wi-Fi"                  # escolhe a interface
 **Monitor completo (com o Wokwi rodando e mostrando `MQTT conectado!`):**
 
 ```
-python monitor.py                                         # usa o CAPACIDADE_REF_BPS do publicador.py (hoje 20 Mbit/s)
-python monitor.py --capacidade 20000000 --media 3         # configuração calibrada: 20 Mbit/s, média de 3 s
+python monitor.py                                         # configuração calibrada: 20 Mbit/s (CAPACIDADE_REF_BPS do publicador.py) e média de 3 s
+python monitor.py --media 1                               # sem média móvel (cada janela de 1 s sozinha)
 python monitor.py --sem-mqtt                              # só mostra as janelas, sem enviar
 python monitor.py --duracao 30                            # para sozinho após 30 s
 python monitor.py --top 5                                 # ao parar, mostra os 5 IPs que mais trafegaram (padrão 10; 0 desliga)
@@ -76,7 +76,7 @@ Para parar, **Ctrl+C uma vez só** e esperar "Monitor finalizado". Ao parar, o d
 ```
 
 - `TCP/UDP/ICMP/OUTROS`: quantidade de pacotes na janela de 1 s.
-- `kbit/s`: taxa (média, se usar `--media`) de TCP + UDP + ICMP. **OUTROS (ex: ARP) não entra na conta.**
+- `kbit/s`: taxa de TCP + UDP + ICMP (média móvel das últimas `--media` janelas, padrão 3). **OUTROS (ex: ARP) não entra na conta.**
 - `ocupação`: taxa dividida pela capacidade de referência (`--capacidade`), limitada a 100%.
 - `nível`: parte inteira de ocupação/10, máximo 9. Alerta (vermelho) quando a ocupação é **80% ou mais**.
 
@@ -174,10 +174,10 @@ Tópico `dac-teste-2026-ocupacao-74291`, QoS 0, sem retain, sem quebra de linha.
 - **Capacidade de referência: 20 Mbit/s, com média móvel de 3 s** (calibração de 26/10/2026; ver `calibracao_resultado.txt` e a decisão D11). Antes o padrão era 1 Mbit/s, e o vermelho acendia em 16 de 62 s em uso normal. A proposta inicial de 10 Mbit/s foi descartada porque o p95 do vídeo (9,37 Mbit/s na média móvel) ocuparia cerca de 94% dela.
 - **Vídeo gera rajadas** (o navegador enche um buffer e depois quase para): a média móvel de 3 s resolve, e foi validada com tráfego real.
 - **Circuito:** a decodificação do display e o acionamento dos LEDs ficam **por software no ESP32**, via MQTT. O professor aprovou essa escolha por e-mail em 26/10/2026 (justificativa: otimizar o tempo de desenvolvimento e focar na estabilidade da integração). Deve constar em "Tomadas de decisão tecnológica" e na "Justificativa da solução" do PDF (decisão D15).
-- **Broker:** desde 25/10/2026 é o `broker.hivemq.com`, porque o `broker.emqx.io` ficou inacessível (ver `registro_incidente_broker_mqtt.txt`). O endereço está em `publicador.py` (`BROKER`) e no `sketch.ino` (`servidor`).
+- **Broker:** desde 25/10/2026 é o `broker.hivemq.com`, porque o `broker.emqx.io` ficou inacessível (teste de conectividade na decisão D6 e no Apêndice B do relatório de decisões). O endereço está em `publicador.py` (`BROKER`) e no `sketch.ino` (`servidor`).
 
-## Ainda não implementado (objetivos da DAC)
+## Situação dos objetivos da DAC
 
-Nenhum dos objetivos de código. Fila, árvore por IP e QuickSort estão em `estruturas.py`; Huffman em `huffman.py`; log e relatório por protocolo no `monitor.py`.
+Todos os objetivos de código estão implementados: fila, árvore por IP e QuickSort em `estruturas.py`; Huffman em `huffman.py`; log e relatório por protocolo no `monitor.py`.
 
-O circuito com portas lógicas, decodificador e multiplexador **não será feito**: o professor aprovou manter a lógica por software no ESP32.
+Fica de fora apenas o circuito com portas lógicas, decodificador e multiplexador: o professor aprovou manter a decodificação e os LEDs por software no ESP32 (D15).

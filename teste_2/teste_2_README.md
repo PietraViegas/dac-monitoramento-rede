@@ -27,7 +27,7 @@ Exemplo: OCUP,85.5,8,1,1
 | `alerta` | 0 = LED verde, 1 = LED vermelho (alerta = 1 quando a ocupação é 80% ou mais) |
 | `valido` | 1 = dado válido, 0 = sem dados (display mostra um traço e os LEDs apagam) |
 
-Broker: `broker.emqx.io:1883`. Tópico: `dac-teste-2026-ocupacao-74291`. Sem quebra de linha. Máximo de 20 caracteres.
+Broker: `broker.hivemq.com:1883` (até 25/10/2026 era `broker.emqx.io`, que ficou inacessível; ver decisão D6). Tópico: `dac-teste-2026-ocupacao-74291`. Sem quebra de linha. Máximo de 20 caracteres.
 
 Se o ESP32 ficar 3 s sem receber mensagem válida, ele entra em "sem dados". Mensagem inválida é ignorada.
 
